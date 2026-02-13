@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Veux-tu être ma Valentine ? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c86dd7 50%, #ff9a9e 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .emoji-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 30px;
+            animation: float 4s infinite ease-in-out;
+            opacity: 0.8;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff69b4;
+            transform: rotate(45deg);
+            animation: heartFloat 6s infinite linear;
+            opacity: 0;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: #ff69b4;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart:after {
+            left: 10px;
+            top: 0;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                bottom: -50px;
+                opacity: 0;
+                transform: rotate(45deg) translateX(0);
+            }
+            25% {
+                opacity: 0.8;
+            }
+            50% {
+                transform: rotate(45deg) translateX(30px);
+            }
+            75% {
+                opacity: 0.8;
+            }
+            100% {
+                bottom: 110vh;
+                opacity: 0;
+                transform: rotate(45deg) translateX(-30px);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 60px 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #e91e63;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        button {
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #oui-btn {
+            padding: 25px 80px;
+            font-size: 2em;
+            background: linear-gradient(135deg, #ff6b9d, #e91e63);
+            color: white;
+        }
+
+        #oui-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
+        }
+
+        #non-btn {
+            padding: 8px 25px;
+            font-size: 0.9em;
+            background: linear-gradient(135deg, #c86dd7, #9c27b0);
+            color: white;
+            position: fixed;
+            z-index: 100;
+            transition: all 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #non-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            animation: bounceIn 0.6s ease;
+            max-width: 450px;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal h2 {
+            font-size: 2.5em;
+            color: #e91e63;
+            margin-bottom: 30px;
+        }
+
+        .modal img {
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            object-fit: cover;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff69b4;
+            position: absolute;
+            animation: confettiFall 3s linear infinite;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            #oui-btn {
+                padding: 20px 60px;
+                font-size: 1.5em;
+            }
+
+            #non-btn {
+                padding: 10px 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="emoji-container" id="emojiContainer"></div>
+
+    <div class="container">
+        <h1>💕 Veux-tu être ma Valentine ? 💕</h1>
+        <div class="button-container">
+            <button id="oui-btn" onclick="handleOui()">Oui ! 💖</button>
+        </div>
+    </div>
+
+    <button id="non-btn">Non</button>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>Ouiiiiii merciiii ! 🎉💕</h2>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3R6eW55bnh6aG54Zno0Znd4Zno0Znd4Zno0Znd4Zno0Znd4ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif" alt="Chat content" class="cat-img">
+        </div>
+    </div>
+
+    <script>
+        // Créer des émojis roses animés
+        const emojis = ['🌹', '💕', '💖', '💗', '💓', '💝', '🌸', '🎀'];
+        const emojiContainer = document.getElementById('emojiContainer');
+
+        for (let i = 0; i < 20; i++) {
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji';
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * 100 + '%';
+            emoji.style.top = Math.random() * 100 + '%';
+            emoji.style.animationDelay = Math.random() * 2 + 's';
+            emoji.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            emojiContainer.appendChild(emoji);
+        }
+
+        // Créer des cœurs flottants
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            emojiContainer.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }, 300);
+
+        const nonBtn = document.getElementById('non-btn');
+
+        // Positionner le bouton "Non" initialement à côté du "Oui"
+        function positionNonButton() {
+            const ouiBtn = document.getElementById('oui-btn');
+            const rect = ouiBtn.getBoundingClientRect();
+
+            nonBtn.style.left = (rect.right + 20) + 'px';
+            nonBtn.style.top = (rect.top + (rect.height / 2) - (nonBtn.offsetHeight / 2)) + 'px';
+        }
+
+        // Initialiser la position
+        window.addEventListener('load', positionNonButton);
+        window.addEventListener('resize', positionNonButton);
+
+        // Déplacer le bouton "Non" partout dans la fenêtre
+        function moveNonButton() {
+            // Marges pour éviter que le bouton sorte de l'écran
+            const margin = 20;
+            const maxX = window.innerWidth - nonBtn.offsetWidth - margin;
+            const maxY = window.innerHeight - nonBtn.offsetHeight - margin;
+
+            // Position aléatoire dans toute la fenêtre
+            const newX = Math.random() * maxX + margin;
+            const newY = Math.random() * maxY + margin;
+
+            nonBtn.style.left = newX + 'px';
+            nonBtn.style.top = newY + 'px';
+        }
+
+        // Événements pour ordinateur (souris)
+        nonBtn.addEventListener('mouseover', moveNonButton);
+        nonBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveNonButton();
+        });
+
+        // Événements pour mobile (tactile)
+        nonBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNonButton();
+        });
+
+        // Détection supplémentaire pour les touches tactiles
+        nonBtn.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+
+        // Gérer le bouton "Oui"
+        function handleOui() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'flex';
+
+            // Créer des confettis
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = ['#ff69b4', '#ff1493', '#c71585', '#db7093'][Math.floor(Math.random() * 4)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        // Fermer la modal en cliquant dessus
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
